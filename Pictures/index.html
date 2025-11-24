@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRide</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1 class="title">SmartRide</h1>
+        <p class="subtitle">Transporte en movimiento • Sucre - Bolivia</p>
+    </header>
+
+    <section class="search-section">
+        <h2>Buscar Transporte</h2>
+        <div class="search-box">
+            <input type="text" placeholder="Ingresa tu ubicación">
+            <button>Buscar</button>
+        </div>
+    </section>
+
+    <section class="map-section">
+        <h2>Mapa de Buses en Tiempo Real</h2>
+        <div id="map"></div>
+    </section>
+
+    <section class="results">
+        <h2>Transporte Disponible</h2>
+
+        <div class="grid">
+
+            <div class="card fade-in"><h3>Bus Línea 1</h3><p>Ubicación: Variable</p><p>Asientos disponibles: 6</p><button class="reserve-btn">Reservar asiento</button></div>
+            <div class="card fade-in"><h3>Bus Línea 12</h3><p>Ubicación: Variable</p><p>Asientos disponibles: 5</p><button class="reserve-btn">Reservar asiento</button></div>
+            <div class="card fade-in"><h3>Bus Línea 33</h3><p>Ubicación: Variable</p><p>Asientos disponibles: 3</p><button class="reserve-btn">Reservar asiento</button></div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>SmartRide © 2025</p>
+    </footer>
+
+
+    <!-- SCRIPT: MOVIMIENTO DE BUSES -->
+    <script>
+        const map = L.map('map').setView([-19.035, -65.259], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Función para mover un marcador aleatoriamente
+        function mover(marker) {
+            let lat = marker.getLatLng().lat + (Math.random() - 0.5) * 0.0015;
+            let lng = marker.getLatLng().lng + (Math.random() - 0.5) * 0.0015;
+            marker.setLatLng([lat, lng]);
+        }
+
+        // Crear buses -----------------
+        function crearBus(nombre, coords) {
+            let icono = L.icon({
+                iconUrl: "https://cdn-icons-png.flaticon.com/512/61/61212.png",
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            return L.marker(coords, { icon: icono })
+                .addTo(map)
+                .bindPopup(`<b>${nombre}</b>`);
+        }
+
+        // Buses Línea 1
+        const buses1 = [
+            crearBus("Línea 1 - Bus A", [-19.038, -65.259]),
+            crearBus("Línea 1 - Bus B", [-19.033, -65.256]),
+            crearBus("Línea 1 - Bus C", [-19.040, -65.260]),
+            crearBus("Línea 1 - Bus D", [-19.036, -65.264])
+        ];
+
+        // Buses Línea 12
+        const buses12 = [
+            crearBus("Línea 12 - Bus A", [-19.042, -65.255]),
+            crearBus("Línea 12 - Bus B", [-19.048, -65.260]),
+            crearBus("Línea 12 - Bus C", [-19.045, -65.263]),
+            crearBus("Línea 12 - Bus D", [-19.037, -65.252]),
+            crearBus("Línea 12 - Bus E", [-19.031, -65.267])
+        ];
+
+        // Buses Línea 33
+        const buses33 = [
+            crearBus("Línea 33 - Bus A", [-19.028, -65.262]),
+            crearBus("Línea 33 - Bus B", [-19.026, -65.259]),
+            crearBus("Línea 33 - Bus C", [-19.032, -65.254]),
+            crearBus("Línea 33 - Bus D", [-19.034, -65.268]),
+            crearBus("Línea 33 - Bus E", [-19.029, -65.270])
+        ];
+
+        // Hacer que todos se muevan cada 5 segundos
+        setInterval(() => {
+            [...buses1, ...buses12, ...buses33].forEach(bus => mover(bus));
+        }, 5000);
+    </script>
+
+</body>
+</html>
